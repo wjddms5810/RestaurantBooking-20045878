@@ -24,14 +24,17 @@ class BookingScheduler:
             raise ValueError("Number of people is over restaurant capacity per hour")
 
         # 일요일에는 시스템을 오픈하지 않는다.
-        #now = datetime.now()
-        #if now.weekday() == 6:  # datetime 모듈에서 일요일은 6
-            #raise ValueError("Booking system is not available on Sunday")
+        now = self.get_now()
+        if now.weekday() == 6:  # datetime 모듈에서 일요일은 6
+            raise ValueError("Booking system is not available on Sunday")
 
         self.schedules.append(schedule)
         self.sms_sender.send(schedule)
         if schedule.get_customer().get_email():
             self.mail_sender.send_mail(schedule)
+
+    def get_now(self):
+        return datetime.now()
 
     def has_schedule(self, schedule):
         return schedule in self.schedules
